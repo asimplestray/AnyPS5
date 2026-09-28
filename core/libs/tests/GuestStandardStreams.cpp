@@ -13,6 +13,7 @@ int APS5_VABI fseeko_nid_postfix(FileStream*, std::int64_t, int);
 std::int64_t APS5_VABI ftello_nid_postfix(FileStream*);
 int APS5_VABI fseek_nid_postfix(FileStream*, std::int64_t, int);
 std::int64_t APS5_VABI ftell_nid_postfix(FileStream*);
+void APS5_VABI rewind_nid_postfix(FileStream*);
 int* APS5_VABI __error_nid_postfix();
 extern FileStream* __stdinp_nid_postfix;
 extern FileStream* __stdoutp_nid_postfix;
@@ -134,6 +135,9 @@ int main() {
     Require(fgetc_nid_postfix(&positioned) == EOF && feof_nid_postfix(&positioned));
     Require(fseeko_nid_postfix(&positioned, 0, SEEK_SET) == 0);
     Require(!feof_nid_postfix(&positioned));
+    Require(fgetc_nid_postfix(&positioned) == EOF && feof_nid_postfix(&positioned));
+    rewind_nid_postfix(&positioned);
+    Require(ftello_nid_postfix(&positioned) == 0 && !feof_nid_postfix(&positioned));
     positioned.Close();
 
     const auto filename = "anyps5-reopen-test-" + std::to_string(std::chrono::steady_clock::now().time_since_epoch().count());

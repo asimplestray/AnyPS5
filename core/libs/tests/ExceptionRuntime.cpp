@@ -25,6 +25,42 @@ extern "C" _Unwind_Reason_Code _Unwind_ForcedUnwind_nid_postfix(_Unwind_Exceptio
 extern "C" std::uintptr_t _Unwind_GetIP_nid_postfix(_Unwind_Context*);
 extern "C" void (*_ZSt13set_terminatePFvvE_nid_postfix(void(*)()))();
 
+struct GuestTypeRecord { const void* const* vtable; const char* name; const void* base; };
+extern "C" GuestTypeRecord _ZTIb_nid_postfix;
+extern "C" GuestTypeRecord _ZTIi_nid_postfix;
+extern "C" GuestTypeRecord _ZTIl_nid_postfix;
+extern "C" GuestTypeRecord _ZTIv_nid_postfix;
+extern "C" GuestTypeRecord _ZTId_nid_postfix;
+extern "C" GuestTypeRecord _ZTIf_nid_postfix;
+extern "C" GuestTypeRecord _ZTIDn_nid_postfix;
+extern "C" GuestTypeRecord _ZTIPKc_nid_postfix;
+extern "C" const void* _ZTVN10__cxxabiv119__pointer_type_infoE_nid_postfix[];
+extern "C" const void* _ZTVN10__cxxabiv120__function_type_infoE_nid_postfix[];
+extern "C" const void* _ZTVN10__cxxabiv116__enum_type_infoE_nid_postfix[];
+static const char* RecordKind(const GuestTypeRecord& record) {
+    return static_cast<const GuestTypeRecord*>(record.vtable[-1])->name;
+}
+void CheckFundamentalRtti() {
+    struct Expectation { const GuestTypeRecord* record; const char* name; const char* kind; };
+    const Expectation cases[] = {
+        {&_ZTIb_nid_postfix, "b", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTIi_nid_postfix, "i", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTIl_nid_postfix, "l", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTIv_nid_postfix, "v", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTId_nid_postfix, "d", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTIf_nid_postfix, "f", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTIDn_nid_postfix, "Dn", "N10__cxxabiv115__fundamental_type_infoE"},
+        {&_ZTIPKc_nid_postfix, "PKc", "N10__cxxabiv119__pointer_type_infoE"},
+    };
+    for (const auto& item : cases) {
+        assert(std::strcmp(item.record->name, item.name) == 0);
+        assert(std::strcmp(RecordKind(*item.record), item.kind) == 0);
+    }
+    assert(std::strcmp(static_cast<const GuestTypeRecord*>(_ZTVN10__cxxabiv119__pointer_type_infoE_nid_postfix[1])->name, "N10__cxxabiv119__pointer_type_infoE") == 0);
+    assert(std::strcmp(static_cast<const GuestTypeRecord*>(_ZTVN10__cxxabiv120__function_type_infoE_nid_postfix[1])->name, "N10__cxxabiv120__function_type_infoE") == 0);
+    assert(std::strcmp(static_cast<const GuestTypeRecord*>(_ZTVN10__cxxabiv116__enum_type_infoE_nid_postfix[1])->name, "N10__cxxabiv116__enum_type_infoE") == 0);
+}
+
 thread_local int destroyed = 0;
 struct Guard {
     ~Guard() { assert(__cxa_uncaught_exceptions_nid_postfix() > 0); ++destroyed; }
@@ -192,6 +228,7 @@ int main() {
     try { __cxa_bad_cast_nid_postfix(); }
     catch (const std::exception& value) { assert(value.what() != nullptr); }
     CheckRtti();
+    CheckFundamentalRtti();
     CheckForeign();
     CheckStaticInitialization();
     CheckArrays();

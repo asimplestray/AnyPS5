@@ -46,6 +46,34 @@ const void* const SingleTypeVtable[] {
     reinterpret_cast<const void*>(NotPointer), reinterpret_cast<const void*>(NotPointer),
     reinterpret_cast<const void*>(TypeCatch), reinterpret_cast<const void*>(TypeUpcast)
 };
+const TypeRecord FundamentalCategory {nullptr, "N10__cxxabiv115__fundamental_type_infoE", nullptr};
+const TypeRecord PointerCategory {nullptr, "N10__cxxabiv119__pointer_type_infoE", nullptr};
+const TypeRecord FunctionCategory {nullptr, "N10__cxxabiv120__function_type_infoE", nullptr};
+const TypeRecord EnumCategory {nullptr, "N10__cxxabiv116__enum_type_infoE", nullptr};
+const void* const FundamentalTypeVtable[] {
+    nullptr, &FundamentalCategory,
+    reinterpret_cast<const void*>(DestroyType), reinterpret_cast<const void*>(DeleteType),
+    reinterpret_cast<const void*>(NotPointer), reinterpret_cast<const void*>(NotPointer),
+    reinterpret_cast<const void*>(TypeCatch), reinterpret_cast<const void*>(TypeUpcast)
+};
+const void* const PointerTypeVtable[] {
+    nullptr, &PointerCategory,
+    reinterpret_cast<const void*>(DestroyType), reinterpret_cast<const void*>(DeleteType),
+    reinterpret_cast<const void*>(NotPointer), reinterpret_cast<const void*>(NotPointer),
+    reinterpret_cast<const void*>(TypeCatch), reinterpret_cast<const void*>(TypeUpcast)
+};
+const void* const FunctionTypeVtable[] {
+    nullptr, &FunctionCategory,
+    reinterpret_cast<const void*>(DestroyType), reinterpret_cast<const void*>(DeleteType),
+    reinterpret_cast<const void*>(NotPointer), reinterpret_cast<const void*>(NotPointer),
+    reinterpret_cast<const void*>(TypeCatch), reinterpret_cast<const void*>(TypeUpcast)
+};
+const void* const EnumTypeVtable[] {
+    nullptr, &EnumCategory,
+    reinterpret_cast<const void*>(DestroyType), reinterpret_cast<const void*>(DeleteType),
+    reinterpret_cast<const void*>(NotPointer), reinterpret_cast<const void*>(NotPointer),
+    reinterpret_cast<const void*>(TypeCatch), reinterpret_cast<const void*>(TypeUpcast)
+};
 
 const char* CopyMessage(const char* message) {
     if (!message) message = "";
@@ -114,6 +142,32 @@ extern "C" {
 LibcException::TypeRecord _ZTISt8ios_base_nid_postfix {LibcException::ClassTypeVtable + 2, "St8ios_base", nullptr};
 LibcException::TypeRecord _ZTISt9exception_nid_postfix {LibcException::ClassTypeVtable + 2, "St9exception", nullptr};
 LibcException::ExceptionVtable _ZTVSt9exception_nid_postfix {0, &_ZTISt9exception_nid_postfix, LibcException::DestroyPlain, LibcException::DeletePlain, LibcException::PlainWhat};
+extern const void* const _ZTVN10__cxxabiv119__pointer_type_infoE_nid_postfix[] {
+    nullptr, &LibcException::PointerCategory,
+    reinterpret_cast<const void*>(LibcException::DestroyType), reinterpret_cast<const void*>(LibcException::DeleteType),
+    reinterpret_cast<const void*>(LibcException::NotPointer), reinterpret_cast<const void*>(LibcException::NotPointer),
+    reinterpret_cast<const void*>(LibcException::TypeCatch), reinterpret_cast<const void*>(LibcException::TypeUpcast)
+};
+extern const void* const _ZTVN10__cxxabiv120__function_type_infoE_nid_postfix[] {
+    nullptr, &LibcException::FunctionCategory,
+    reinterpret_cast<const void*>(LibcException::DestroyType), reinterpret_cast<const void*>(LibcException::DeleteType),
+    reinterpret_cast<const void*>(LibcException::NotPointer), reinterpret_cast<const void*>(LibcException::NotPointer),
+    reinterpret_cast<const void*>(LibcException::TypeCatch), reinterpret_cast<const void*>(LibcException::TypeUpcast)
+};
+extern const void* const _ZTVN10__cxxabiv116__enum_type_infoE_nid_postfix[] {
+    nullptr, &LibcException::EnumCategory,
+    reinterpret_cast<const void*>(LibcException::DestroyType), reinterpret_cast<const void*>(LibcException::DeleteType),
+    reinterpret_cast<const void*>(LibcException::NotPointer), reinterpret_cast<const void*>(LibcException::NotPointer),
+    reinterpret_cast<const void*>(LibcException::TypeCatch), reinterpret_cast<const void*>(LibcException::TypeUpcast)
+};
+LibcException::TypeRecord _ZTIb_nid_postfix {LibcException::FundamentalTypeVtable + 2, "b", nullptr};
+LibcException::TypeRecord _ZTIi_nid_postfix {LibcException::FundamentalTypeVtable + 2, "i", nullptr};
+LibcException::TypeRecord _ZTIl_nid_postfix {LibcException::FundamentalTypeVtable + 2, "l", nullptr};
+LibcException::TypeRecord _ZTIv_nid_postfix {LibcException::FundamentalTypeVtable + 2, "v", nullptr};
+LibcException::TypeRecord _ZTId_nid_postfix {LibcException::FundamentalTypeVtable + 2, "d", nullptr};
+LibcException::TypeRecord _ZTIf_nid_postfix {LibcException::FundamentalTypeVtable + 2, "f", nullptr};
+LibcException::TypeRecord _ZTIDn_nid_postfix {LibcException::FundamentalTypeVtable + 2, "Dn", nullptr};
+LibcException::TypeRecord _ZTIPKc_nid_postfix {LibcException::PointerTypeVtable + 2, "PKc", nullptr};
 void APS5_VABI _ZNSt9exceptionD1Ev_nid_postfix(LibcException::ExceptionObject* self) { LibcException::DestroyPlain(self); }
 void APS5_VABI _ZNSt9exceptionD2Ev_nid_postfix(LibcException::ExceptionObject* self) { LibcException::DestroyPlain(self); }
 void APS5_VABI _ZNSt9exceptionD0Ev_nid_postfix(LibcException::ExceptionObject* self) { LibcException::DeletePlain(self); }

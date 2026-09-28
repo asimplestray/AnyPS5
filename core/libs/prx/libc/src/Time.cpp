@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <ctime>
 #include <cstring>
+#include <cwchar>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -95,6 +96,10 @@ char* APS5_VABI asctime_nid_postfix(const std::tm* timeptr) {
 
 size_t APS5_VABI strftime_nid_postfix(char* str, size_t count, const char* format, const std::tm* timeptr) {
     return std::strftime(str, count, format, timeptr);
+}
+
+std::size_t APS5_VABI wcsftime_nid_postfix(wchar_t* str, std::size_t count, const wchar_t* format, const std::tm* timeptr) {
+    return std::wcsftime(str, count, format, timeptr);
 }
 
 // The guest's CLOCKS_PER_SEC is 1000000: clock() reports process CPU time in microseconds.
