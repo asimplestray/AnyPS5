@@ -170,9 +170,9 @@ RdnaOpcode decodeSopkOpcode(std::uint32_t opcode) {
         case 0x10u: return RdnaOpcode::SMulkI32;
         case 0x13u: return RdnaOpcode::SSetregB32;
         case 0x17u: return RdnaOpcode::SWaitcnt;
-        case 0x18u: return RdnaOpcode::SWaitcnt;
-        case 0x19u: return RdnaOpcode::SWaitcnt;
-        case 0x1au: return RdnaOpcode::SWaitcnt;
+        case 0x18u: return RdnaOpcode::SWaitcntVmcnt;
+        case 0x19u: return RdnaOpcode::SWaitcntExpcnt;
+        case 0x1au: return RdnaOpcode::SWaitcntLgkmcnt;
         case 0x1bu: return RdnaOpcode::SSubvectorLoopBegin;
         case 0x1cu: return RdnaOpcode::SSubvectorLoopEnd;
         default: throw std::invalid_argument("unsupported SOPK opcode " + std::to_string(opcode));
@@ -221,7 +221,8 @@ void decodeScalarBinarySources(std::uint32_t programCounter, std::span<const std
 }
 
 bool isSoppWaitOpcode(RdnaOpcode opcode) {
-    return opcode == RdnaOpcode::SNop || opcode == RdnaOpcode::SWaitcnt || opcode == RdnaOpcode::SWaitcntDepctr ||
+    return opcode == RdnaOpcode::SNop || opcode == RdnaOpcode::SWaitcnt || opcode == RdnaOpcode::SWaitcntVmcnt ||
+        opcode == RdnaOpcode::SWaitcntExpcnt || opcode == RdnaOpcode::SWaitcntLgkmcnt || opcode == RdnaOpcode::SWaitcntDepctr ||
         opcode == RdnaOpcode::SSleep || opcode == RdnaOpcode::SSetprio || opcode == RdnaOpcode::SSendmsg ||
         opcode == RdnaOpcode::STrap || opcode == RdnaOpcode::STtracedata || opcode == RdnaOpcode::SInstPrefetch ||
         opcode == RdnaOpcode::SClause || opcode == RdnaOpcode::SCbranchCdbg || opcode == RdnaOpcode::SIcacheInv ||
@@ -383,7 +384,8 @@ RdnaInstruction DecodeRdnaSopk(std::uint32_t programCounter, std::span<const std
         instruction.branchTarget = programCounter + 4u + static_cast<std::uint32_t>(immediate * 4);
         return instruction;
     }
-    if (instruction.op == RdnaOpcode::SWaitcnt) {
+    if (instruction.op == RdnaOpcode::SWaitcnt || instruction.op == RdnaOpcode::SWaitcntVmcnt ||
+        instruction.op == RdnaOpcode::SWaitcntExpcnt || instruction.op == RdnaOpcode::SWaitcntLgkmcnt) {
         const std::uint32_t waitcnt = word & 0xffffu;
         instruction.destination.kind = RdnaOperandKind::Null;
         instruction.source0.signedVal = static_cast<std::int32_t>(waitcnt);
